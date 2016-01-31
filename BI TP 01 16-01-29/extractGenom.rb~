@@ -1,0 +1,17 @@
+class genom
+
+def initialize
+    parseFasta.last.delete("\n")
+end
+
+def parseFasta
+    File.read(ARGV[ARGV.length - 1]).split("\n", 2)
+end
+
+def genom
+    
+end
+
+def printFastaSequences 
+    puts genom
+end

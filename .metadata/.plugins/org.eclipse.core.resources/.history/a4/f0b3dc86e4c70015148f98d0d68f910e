@@ -1,0 +1,45 @@
+#!/usr/bin/ruby
+
+def main
+    case ARGV[0] 
+    when "print-fasta-sequences"
+        printFastaSequences()
+    when "print-fasta-stats"
+        printFastaStats()
+    when "list-kmers"
+        listKmers()
+    else
+        puts "unknown function"
+    end
+end
+
+def parseFasta
+    File.read(ARGV[ARGV.length - 1]).split("\n", 2)
+end
+
+def printFastaSequences 
+    puts parseFasta.last.delete("\n")
+end
+
+def printFastaStats
+    genom = parseFasta
+    id = genom[0][1..-1]
+    size = genom[1].delete("\n").length
+    puts "#{id} #{size}"
+end
+
+def listKmers
+    s = ""
+    n = ARGV[1].to_i
+    genom = parseFasta.last.delete("\n")
+    genom.each_char do |c|
+        s += c
+        if s.length == n
+            puts s[0..(n - 1)]
+            s = s[1..(n - 1)]
+        end
+    end
+    end
+end
+
+main

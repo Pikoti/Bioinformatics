@@ -95,7 +95,7 @@ def randomMutation
             out_file.print(genom(ARGV[2])[0..rand-1])
             out_file.print(changeLetter(ARGV[2],rand))
         end
-        if rand != genom(ARGV[2]).length - 1
+        if rand != genom(ARGV[2]).length)-1
             out_file.print(genom(ARGV[2])[rand..(genom(ARGV[2]).length)-1])
         end
     end

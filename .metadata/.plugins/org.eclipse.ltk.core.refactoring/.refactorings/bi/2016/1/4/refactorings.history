@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;bi/BI TP 01 16-01-29/bioseq&apos; to &apos;bioseq.rb&apos;" description="Rename resource &apos;bioseq&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="BI TP 01 16-01-29/bioseq" name="bioseq.rb" stamp="1454221893554" updateReferences="true"/>
+</session>
