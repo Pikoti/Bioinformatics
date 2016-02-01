@@ -2,103 +2,116 @@
 
 def main
     case ARGV[0] 
-    when "print-fasta-sequences"
-        printFastaSequences(ARGV[1])
-    when "print-fasta-stats"
-        printFastaStats(ARGV[1])
-    when "list-kmers"
-        puts arrayKmers(ARGV[2])
-    when "common-kmers"
-        puts commonKmers[1]
-    when "ratio-common-kmers"
-        ratioCommonKmers
-    when "random-mutations"
-        randomMutation
-    when "f"
-        randomMutation
-    else
-        puts "unknown function"
+        when "print-fasta-sequences"
+            whenPrintFastaSequences(ARGV)
+        when "print-fasta-stats"
+            whenPrintFastaStats(ARGV)
+        when "list-kmers"
+            whenListKmers(ARGV)
+        when "common-kmers" 
+            whenCommonKmers(ARGV)
+        when "ratio-common-kmers"
+            whenRatioCommonKmers(ARGV)
+        when "random-mutations"
+            randomMutation(ARGV[1].to_i, ARGV[2])
+        when "f"
+            randomMutation(ARGV[1].to_i, ARGV[2])
+        else
+            puts "unknown function"
     end
 end
 
-def parseFasta (argv)
-    File.read(argv).split("\n", 2)
+# commands
+
+def whenPrintFastaSequences (argv)
+    puts parseFasta(argv[1]).last.delete("\n")
 end
 
-def genom (argv)
-    parseFasta(argv).last.delete("\n")
-end
-
-def printFastaSequences (argv)
-    puts genom(argv)
-end
-
-def printFastaStats (argv)
-    id = parseFasta[0][1..-1]
-    size = genom(argv).length
+def whenPrintFastaStats (argv)
+    fasta = parseFasta(argv[1])
+    id = fasta[0][1..-1]
+    size = fasta.last.delete("\n").length
     puts "#{id} #{size}"
 end
 
-def arrayKmers (argv)
-    s = ""
-    n = ARGV[1].to_i
-    genomKmers = []
-    genom(argv).each_char do |c|
-        s += c
-        if s.length == n
-            genomKmers.push(s[0..(n - 1)])
-            s = s[1..(n - 1)]
+def whenListKmers (argv)
+    size = argv[1].to_i
+    genom = parseFasta(argv[2])
+    genom = genom.last.delete("\n")
+    puts genomToKmers(genom, size)
+end
+
+def whenCommonKmers (argv)
+    size = argv[1].to_i
+    genom1 = parseFasta(argv[2])
+    genom1 = genom1.last.delete("\n")
+    genom1 = genomToKmers(genom1, size)
+    genom2 = parseFasta(argv[3])
+    genom2 = genom2.last.delete("\n")
+    genom2 = genomToKmers(genom2, size)
+    puts commonKmers(genom1, genom2)
+end
+
+def whenRatioCommonKmers (argv)
+    size = argv[1].to_i
+    genom1 = parseFasta(argv[2])
+    genom1 = genom1.last.delete("\n")
+    genom1 = genomToKmers(genom1, size)
+    genom2 = parseFasta(argv[3])
+    genom2 = genom2.last.delete("\n")
+    genom2 = genomToKmers(genom2, size)
+    commons = commonKmers(genom1, genom2)
+    puts commons.size.to_f / genom1.size.to_f
+end
+
+# utils
+
+def parseFasta (file)
+    File.read(file).split("\n", 2)
+end
+
+def genomToKmers (genom, size)
+    str = ""
+    kmers = []
+    genom.each_char do |c|
+        str += c
+        if str.length == size
+            kmers.push(str[0..(size - 1)])
+            str = str[1..(size - 1)]
         end
     end
-    genomKmers
+    kmers
 end 
 
-def commonKmers
-    array1 = arrayKmers(ARGV[2])
-    array2 = arrayKmers(ARGV[3])
+# algos
+
+def commonKmers (genom1, genom2)
     commons = []
-    for kmer in array1.each
-        if array2.include? kmer
+    genom1.each do |kmer|
+        if genom2.include? kmer
             commons.push(kmer)
         end
     end
-    [array1, commons]
+    commons
 end
 
-def ratioCommonKmers
-    size1 = commonKmers[0].size
-    sizeCommon = commonKmers[1].size
-    puts sizeCommon.to_f/size1.to_f
+def changeLetter (genom, i)
+    letter = genom[i]
+    alphabet = ["A", "C", "G", "T"]
+    alphabet = alphabet.reject { |l| l == letter }
+    alphabet = alphabet.shuffle
+    genom[i] = alphabet[0]
 end
 
-def changeLetter (argv, rand)
-    alphabet = ["A","C","G","T"]
-    letter = genom(argv)[rand]
-    puts letter
-    puts rand
-    print letter = alphabet.reject {|l| l == letter}.shuffle[0]
-    genom(argv)[rand] = letter
-end
-
-def randomMutation 
-    j = 0
-    i = ARGV[1].to_i
-    name = ARGV[2].split(".",2)[0] + "-mutant-" + ARGV[1] + ".txt"
-    out_file = File.new(name, "w")
-    in_file = open(ARGV[2])
-    out_file.puts(">" + name.split(".",2)[0])
-    i.times do
-        rand = rand(0..(genom(ARGV[2]).length)-1)
-        if rand == 0
-            out_file.print(changeLetter(ARGV[2],rand))
-        else
-            out_file.print(genom(ARGV[2])[0..rand-1])
-            out_file.print(changeLetter(ARGV[2],rand))
-        end
-        if rand != genom(ARGV[2]).length - 1
-            out_file.print(genom(ARGV[2])[rand..(genom(ARGV[2]).length)-1])
-        end
+def randomMutation (mutations, file)
+    id = file.split(".", 2)[0]
+    puts ">#{id}-mutated (#{mutations})"
+    genom = parseFasta(file).last.delete("\n")
+    mutations.times do
+        i = rand(0..(genom.length - 1))
+        changeLetter(genom, i)
     end
+    print genom
 end
 
 
