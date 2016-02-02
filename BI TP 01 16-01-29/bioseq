@@ -2,20 +2,27 @@
 
 def main
     case ARGV[0] 
-        when "print-fasta-sequences"
-            whenPrintFastaSequences(ARGV)
-        when "print-fasta-stats"
-            whenPrintFastaStats(ARGV)
+        when "print-fasta-sequences" 
+            # args: file
+            puts fileToGenom(ARGV[1])
+        when "print-fasta-stats" 
+            # args: file
+            whenPrintFastaStats(ARGV[1])
         when "list-kmers"
-            whenListKmers(ARGV)
+            # args: size, file
+            whenListKmers(ARGV[1].to_i, ARGV[2])
         when "common-kmers" 
-            whenCommonKmers(ARGV)
-        when "ratio-common-kmers"
-            whenRatioCommonKmers(ARGV)
-        when "random-mutations"
+            # args: size, file1, file2
+            whenCommonKmers(ARGV[1].to_i, ARGV[2], ARGV[3])
+        when "ratio-common-kmers" 
+            # args: size, file1, file2
+            whenRatioCommonKmers(ARGV[1].to_i, ARGV[2], ARGV[3])
+        when "random-mutations" 
+            # args: mutations, file
             randomMutation(ARGV[1].to_i, ARGV[2])
-        when "f"
-            randomMutation(ARGV[1].to_i, ARGV[2])
+        when "list-spaced-kmers"
+            # args: seed, file
+            whenListSpacedKmers(ARGV[1], ARGV[2])
         else
             puts "unknown function"
     end
@@ -23,51 +30,53 @@ end
 
 # commands
 
-def whenPrintFastaSequences (argv)
-    puts parseFasta(argv[1]).last.delete("\n")
-end
-
-def whenPrintFastaStats (argv)
-    fasta = parseFasta(argv[1])
+def whenPrintFastaStats (file)
+    fasta = parseFasta(file)
     id = fasta[0][1..-1]
     size = fasta.last.delete("\n").length
     puts "#{id} #{size}"
 end
 
-def whenListKmers (argv)
-    size = argv[1].to_i
-    genom = parseFasta(argv[2])
-    genom = genom.last.delete("\n")
-    puts genomToKmers(genom, size)
+def whenListKmers(size, file)
+    genom = fileToGenom(file)
+    kmers = genomToKmers(genom, size)
+    puts kmers
 end
 
-def whenCommonKmers (argv)
-    size = argv[1].to_i
-    genom1 = parseFasta(argv[2])
-    genom1 = genom1.last.delete("\n")
-    genom1 = genomToKmers(genom1, size)
-    genom2 = parseFasta(argv[3])
-    genom2 = genom2.last.delete("\n")
-    genom2 = genomToKmers(genom2, size)
-    puts commonKmers(genom1, genom2)
+def whenCommonKmers (size, file1, file2)
+    genom1 = fileToGenom(file1)
+    kmers1 = genomToKmers(genom1, size)
+    genom2 = fileToGenom(file2)
+    kmers2 = genomToKmers(genom2, size)
+    commons = commonKmers(kmers1, kmers2)
+    puts commons
 end
 
-def whenRatioCommonKmers (argv)
-    size = argv[1].to_i
-    genom1 = parseFasta(argv[2])
-    genom1 = genom1.last.delete("\n")
+def whenRatioCommonKmers (size, file1, file2)
+    genom1 = fileToGenom(file1)
     genom1 = genomToKmers(genom1, size)
-    genom2 = parseFasta(argv[3])
-    genom2 = genom2.last.delete("\n")
+    genom2 = fileToGenom(file2)
     genom2 = genomToKmers(genom2, size)
     commons = commonKmers(genom1, genom2)
     puts commons.size.to_f / genom1.size.to_f
+end
+
+def whenListSpacedKmers(seed, file)
+    size = seed.length
+    genom = fileToGenom(file)
+    kmers = genomToKmers(genom, size)
+    kmers = applySeed(kmers, seed)
+    puts kmers
 end
 
 # utils
 
 def parseFasta (file)
     File.read(file).split("\n", 2)
+end
+
+def fileToGenom(file)
+    parseFasta(file).last.delete("\n")
 end
 
 def genomToKmers (genom, size)
@@ -95,25 +104,34 @@ def commonKmers (genom1, genom2)
     commons
 end
 
-def changeLetter (genom, i)
-    letter = genom[i]
+def changeOneLetter (genom)
+    i = rand(genom.length)
     alphabet = ["A", "C", "G", "T"]
-    alphabet = alphabet.reject { |l| l == letter }
+    alphabet = alphabet - [genom[i]]
     alphabet = alphabet.shuffle
     genom[i] = alphabet[0]
 end
 
 def randomMutation (mutations, file)
     id = file.split(".", 2)[0]
-    puts ">#{id}-mutated (#{mutations})"
+    puts ">#{id}-mutated-#{mutations}"
     genom = parseFasta(file).last.delete("\n")
-    mutations.times do
-        i = rand(0..(genom.length - 1))
-        changeLetter(genom, i)
-    end
+    mutations.times do changeOneLetter(genom) end
     print genom
 end
 
+def applySeed(kmers, seed)
+    size = seed.length
+    kmers.map do |kmer|
+        spaced = ""
+        size.times do |i|
+            if seed[i] == '#'
+                spaced += kmer[i]
+            end
+        end
+        spaced
+    end
+end
 
 main
 

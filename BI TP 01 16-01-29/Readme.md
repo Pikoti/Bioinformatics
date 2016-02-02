@@ -1,6 +1,8 @@
 BI TP 1, Lucie Vigreux, Edouard Delbar, groupe 2
 
-Question 9
+----
+
+**Question 9**
 
     ebola-t phage-lambda  4   1.0
     ebola-t phage-lambda  8   0.49244505494505497
@@ -16,11 +18,17 @@ Question 9
 
 La différence est significative sur des kmers de taille >= 12. On voit que les deux virus ebola sont plus proches que ebola-t et phage-lamba.
 
-Question 10
+----
 
-    ./bioseq f 3 test1.fasta | tail -n 1 ; echo ; tail -n 1 test1.fasta
+**Question 10**
 
-Question 11
+    > ./bioseq random-mutations 2 test1.fasta | tail -n 1 ; echo ; tail -n 1 test1.fasta
+    ATACTATACC
+    ATACTGTACT
+
+----
+
+**Question 11**
 
     ebola-z ebola-mutant-10     12  0.9937196537893181
     ebola-z ebola-mutant-100    12  0.9392020265991133
@@ -28,3 +36,16 @@ Question 11
     ebola-z ebola-mutant-10000  12  0.00506649778340722
 
 On remarque que plus il y a de mutations moins il y a de kmers communs entre les 2 ADNs.
+
+----
+
+**Question 12**
+
+    > ./bioseq list-spaced-kmers '##-##' test1.fasta 
+    ATCT
+    TATG
+    ACGT
+    CTTA
+    TGAC
+    GTCT
+
