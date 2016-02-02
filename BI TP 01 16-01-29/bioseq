@@ -13,16 +13,22 @@ def main
             whenListKmers(ARGV[1].to_i, ARGV[2])
         when "common-kmers" 
             # args: size, file1, file2
-            whenCommonKmers(ARGV[1].to_i, ARGV[2], ARGV[3])
+            whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenCommonKmers)
         when "ratio-common-kmers" 
             # args: size, file1, file2
-            whenRatioCommonKmers(ARGV[1].to_i, ARGV[2], ARGV[3])
+            whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenRatioCommonKmers)
         when "random-mutations" 
             # args: mutations, file
             randomMutation(ARGV[1].to_i, ARGV[2])
         when "list-spaced-kmers"
             # args: seed, file
             whenListSpacedKmers(ARGV[1], ARGV[2])
+        when "common-spaced-kmers" 
+            # args: seed, file1, file2
+            whenCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
+        when "ratio-common-spaced-kmers" 
+            # args: seed, file1, file2
+            whenRatioCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
         else
             puts "unknown function"
     end
@@ -43,22 +49,21 @@ def whenListKmers(size, file)
     puts kmers
 end
 
-def whenCommonKmers (size, file1, file2)
+def whenCommon(size, file1, file2, f)
     genom1 = fileToGenom(file1)
     kmers1 = genomToKmers(genom1, size)
     genom2 = fileToGenom(file2)
     kmers2 = genomToKmers(genom2, size)
-    commons = commonKmers(kmers1, kmers2)
-    puts commons
+    send(f, kmers1, kmers2)
 end
 
-def whenRatioCommonKmers (size, file1, file2)
-    genom1 = fileToGenom(file1)
-    genom1 = genomToKmers(genom1, size)
-    genom2 = fileToGenom(file2)
-    genom2 = genomToKmers(genom2, size)
-    commons = commonKmers(genom1, genom2)
-    puts commons.size.to_f / genom1.size.to_f
+def whenCommonKmers (kmers1, kmers2)
+    puts commonKmers(kmers1, kmers2)
+end
+
+def whenRatioCommonKmers (kmers1, kmers2)
+    commons = commonKmers(kmers1, kmers2)
+    puts commons.size.to_f / kmers1.size.to_f
 end
 
 def whenListSpacedKmers(seed, file)
@@ -67,6 +72,26 @@ def whenListSpacedKmers(seed, file)
     kmers = genomToKmers(genom, size)
     kmers = applySeed(kmers, seed)
     puts kmers
+end
+
+def whenCommonSpacedKmers (seed, file1, file2)
+    size = seed.length
+    genom1 = fileToGenom(file1)
+    kmers1 = genomToKmers(genom1, size)
+    genom2 = fileToGenom(file2)
+    kmers2 = genomToKmers(genom2, size)
+    commons = commonSpacedKmers(seed, kmers1, kmers2)
+    puts commons
+end
+
+def whenRatioCommonSpacedKmers (seed, file1, file2)
+    size = seed.length
+    genom1 = fileToGenom(file1)
+    kmers1 = genomToKmers(genom1, size)
+    genom2 = fileToGenom(file2)
+    kmers2 = genomToKmers(genom2, size)
+    commons = commonSpacedKmers(seed, kmers1, kmers2)
+    puts commons.size.to_f / kmers1.size.to_f
 end
 
 # utils
@@ -94,10 +119,16 @@ end
 
 # algos
 
-def commonKmers (genom1, genom2)
+def commonSpacedKmers (seed, kmers1, kmers2)
+    kmers1 = applySeed(kmers1, seed)
+    kmers2 = applySeed(kmers2, seed)
+    commonKmers(kmers1, kmers2)
+end
+
+def commonKmers (kmers1, kmers2)
     commons = []
-    genom1.each do |kmer|
-        if genom2.include? kmer
+    kmers1.each do |kmer|
+        if kmers2.include? kmer
             commons.push(kmer)
         end
     end
@@ -121,15 +152,14 @@ def randomMutation (mutations, file)
 end
 
 def applySeed(kmers, seed)
-    size = seed.length
     kmers.map do |kmer|
-        spaced = ""
-        size.times do |i|
+        newKmer = ""
+        seed.length.times do |i|
             if seed[i] == '#'
-                spaced += kmer[i]
+                newKmer += kmer[i]
             end
         end
-        spaced
+        newKmer
     end
 end
 
