@@ -1,0 +1,28 @@
+<diagram program="umletino" version="14.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>820</x><y>150</y><w>250</w><h>280</h></coordinates><panel_attributes>Genom
+--
+# id : string
+# genom : string
+--
+# initialize(id : string, genom : string)
++ toKmers(size : integer) : [Kmer]
++ toSpacedKmers(seed : string) : [Kmer]
++ getSize() : integer
++ getStats() : string
++ mutate(n : integer) : void
++ clone() : Genom
++ to_s() : string
+# changeOneLetter() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1130</x><y>260</y><w>240</w><h>110</h></coordinates><panel_attributes>Kmer
+--
+# kmer : string
+--
++ initialize(kmer : String)
++ equals(kmer : Kmer) : boolean
++ to_s() : string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1130</x><y>130</y><w>250</w><h>110</h></coordinates><panel_attributes>Kmers
+--
+# kmers : [Kmer]
+--
++ initialize(kmers : [Kmer])
++ commonsRatio(kmers : Kmers) : boolean
++ to_s() : string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>400</x><y>190</y><w>240</w><h>100</h></coordinates><panel_attributes>Fasta
+--
+_+ toGenom(File : file)_</panel_attributes><additional_attributes></additional_attributes></element></diagram>

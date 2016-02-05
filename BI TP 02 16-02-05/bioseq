@@ -1,0 +1,105 @@
+#!/usr/bin/ruby
+
+require './src/Fasta.rb'
+require './src/Genom.rb'
+
+def main
+    case ARGV[0] 
+        when "print-fasta-sequences" 
+            # args: file
+            puts Fasta.toGenom(ARGV[1])
+        when "print-fasta-stats" 
+            # args: file
+            puts Fasta.toGenom(ARGV[1]).stats()
+        when "list-kmers"
+            # args: size, file
+            puts Fasta.toGenom(ARGV[2]).toKmers(ARGV[1].to_i)
+        when "common-kmers" 
+            # args: size, file1, file2
+            whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenCommonKmers)
+        when "ratio-common-kmers" 
+            # args: size, file1, file2
+            whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenRatioCommonKmers)
+        when "random-mutations" 
+            # args: mutations, file
+            whenRandomMutations(ARGV[1].to_i, ARGV[2])
+        when "list-spaced-kmers"
+            # args: seed, file
+            puts Fasta.toGenom(ARGV[2]).toKmers(ARGV[1])
+        when "common-spaced-kmers" 
+            # args: seed, file1, file2
+            whenCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
+        when "ratio-common-spaced-kmers" 
+            # args: seed, file1, file2
+            whenRatioCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
+        #when "windows" 
+            # args: length, shift, file
+            #windows(ARGV[1].to_i, ARGV[2].to_i, ARGV[3])
+        else
+            puts "unknown function"
+    end
+end
+
+# commands
+
+def whenCommon(size, file1, file2, f)
+    genom1 = Fasta.toGenom(file1)
+    kmers1 = genom1.toKmers(size)
+    genom2 = Fasta.toGenom(file2)
+    kmers2 = genom2.toKmers(size)
+    send(f, kmers1, kmers2)
+end
+
+def whenCommonKmers (kmers1, kmers2)
+    puts commonKmers(kmers1, kmers2)
+end
+
+def whenRatioCommonKmers (kmers1, kmers2)
+    commons = commonKmers(kmers1, kmers2)
+    puts commons.size.to_f / kmers1.size.to_f
+end
+
+def whenCommonSpacedKmers (seed, file1, file2)
+    genom1 = Fasta.toGenom(file1)
+    kmers1 = genom1.toSpacedKmers(seed)
+    genom2 = Fasta.toGenom(file2)
+    kmers2 = genom2.toSpacedKmers(seed)
+    commons = commonKmers(kmers1, kmers2)
+    puts commons
+end
+
+def whenRatioCommonSpacedKmers (seed, file1, file2)
+    genom1 = Fasta.toGenom(file1)
+    kmers1 = genom1.toSpacedKmers(seed)
+    genom2 = Fasta.toGenom(file2)
+    kmers2 = genom2.toSpacedKmers(seed)
+    commons = commonKmers(kmers1, kmers2)
+    puts commons.size.to_f / kmers1.size.to_f
+end
+
+def whenRandomMutations (n, file)
+    genom = Fasta.toGenom(file).mutate(n)
+    puts ">#{genom.id}-mutated-#{n}"
+    puts genom
+end
+
+# algos
+
+def commonKmers (kmers1, kmers2)
+    commons = []
+    kmers1.each do |kmer|
+        if kmers2.include? kmer
+            commons.push(kmer)
+        end
+    end
+    commons
+end
+
+#def windows (length, shift, genom)
+        
+#end
+
+main
+
+
+

@@ -1,0 +1,95 @@
+#!/bin/bash
+
+set -x
+chmod +x bioseq
+
+#./bioseq print-fasta-sequences test1.fasta
+echo
+
+# stats
+
+#./bioseq print-fasta-stats test1.fasta
+echo
+#./bioseq print-fasta-stats phage-lambda.fasta
+echo
+#./bioseq print-fasta-stats ebola-z.fasta
+echo
+#./bioseq print-fasta-stats ebola-t.fasta
+echo
+
+# kmers
+
+#./bioseq list-kmers 4 test1.fasta
+echo
+#./bioseq common-kmers 4 test2.fasta test1.fasta
+echo
+#./bioseq ratio-common-kmers 4 test2.fasta test1.fasta
+echo
+
+# ratio ebola-z phage-lambda
+
+#./bioseq ratio-common-kmers 4 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 8 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 12 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 16 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 20 ebola-z.fasta phage-lambda.fasta
+echo
+
+# ratio ebola-z ebola-t
+
+#./bioseq ratio-common-kmers 4 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 8 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 12 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 16 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 20 ebola-z.fasta ebola-t.fasta
+echo
+
+# mutations
+
+#./bioseq random-mutations 2 test1.fasta
+echo
+#./bioseq random-mutations 0 ebola-z.fasta > ebola-mutant-0.fasta
+echo
+#./bioseq random-mutations 10 ebola-z.fasta > ebola-mutant-10.fasta
+echo
+#./bioseq random-mutations 100 ebola-z.fasta > ebola-mutant-100.fasta
+echo
+#./bioseq random-mutations 1000 ebola-z.fasta > ebola-mutant-1000.fasta
+echo
+#./bioseq random-mutations 10000 ebola-z.fasta > ebola-mutant-10000.fasta
+echo
+
+# spaced kmers
+
+#./bioseq list-spaced-kmers '##-##' test1.fasta
+echo
+./bioseq common-spaced-kmers '#-#' test1.fasta test2.fasta
+echo
+./bioseq ratio-common-spaced-kmers '####--####' ebola-z.fasta ebola-t.fasta
+echo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

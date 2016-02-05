@@ -1,0 +1,8 @@
+#!/usr/bin/ruby
+
+require './src/Fasta.rb'
+require './src/Genom.rb'
+
+genom = Fasta.toGenom("test1.fasta")
+puts genom
+puts genom.mutate(1)
