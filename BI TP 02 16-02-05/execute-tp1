@@ -71,9 +71,9 @@ echo
 
 #./bioseq list-spaced-kmers '##-##' test1.fasta
 echo
-./bioseq common-spaced-kmers '#-#' test1.fasta test2.fasta
+#./bioseq common-spaced-kmers '#-#' test1.fasta test2.fasta
 echo
-./bioseq ratio-common-spaced-kmers '####--####' ebola-z.fasta ebola-t.fasta
+#./bioseq ratio-common-spaced-kmers '####--####' ebola-z.fasta ebola-t.fasta
 echo
 
 

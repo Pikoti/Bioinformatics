@@ -32,9 +32,9 @@ def main
         when "ratio-common-spaced-kmers" 
             # args: seed, file1, file2
             whenRatioCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
-        #when "windows" 
+        when "windows" 
             # args: length, shift, file
-            #windows(ARGV[1].to_i, ARGV[2].to_i, ARGV[3])
+            windows(ARGV[1].to_i, ARGV[2].to_i, ARGV[3])
         else
             puts "unknown function"
     end
@@ -95,11 +95,57 @@ def commonKmers (kmers1, kmers2)
     commons
 end
 
-#def windows (length, shift, genom)
-        
-#end
+def windows (length, shift, file)
+    i = 0
+    genom = Fasta.toGenom(file)
+    pad = Math.log10(genom.size()).ceil
+    loop do
+        window = genom.window(i, length)
+        if window.length < length
+            break
+        else
+            lNum = (i + 1).to_s.rjust(pad, ' ')
+            rNum = (i + length).to_s.rjust(pad, ' ')
+            puts "#{lNum} #{window} #{rNum}"
+            i += shift
+        end
+    end
+end
 
 main
+
+
+azerty
+   rtyqsd
+      qsdghj
+         ghjklm
+
+azerty
+      rtyqsd
+            qsdghj
+                  ghjklm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

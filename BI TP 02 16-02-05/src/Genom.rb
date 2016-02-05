@@ -67,7 +67,7 @@ class Genom
     end
 
     def window(i, length)
-        @genom[i..i + length]
+        @genom[i..i + length - 1]
     end    
 
 end
