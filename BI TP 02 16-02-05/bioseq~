@@ -129,9 +129,9 @@ def toWindows (length, shift, genom)
         if window.length < length
             break
         else
+            w = Window.new
             lNum = (i + 1).to_s.rjust(pad, ' ')
             rNum = (i + length).to_s.rjust(pad, ' ')
-            w = Window.new
             w.content = window
             w.rNum = rNum
             w.lNum = lNum
