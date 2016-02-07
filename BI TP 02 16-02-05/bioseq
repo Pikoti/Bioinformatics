@@ -38,7 +38,7 @@ def main
         when "mapper-windows-kmers" 
             # args: windows length, shift length, kmer length, 
             # kmer seuil, read, genom
-            whenMapperKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, ARGV[4].to_i, ARGV[5], ARGV[6])
+            whenMapperKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, ARGV[4].to_f, ARGV[5], ARGV[6])
         when "f"
             whenMapperKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, ARGV[4].to_f, ARGV[5], ARGV[6])
         else

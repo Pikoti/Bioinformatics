@@ -76,6 +76,19 @@ echo
 #./bioseq ratio-common-spaced-kmers '####--####' ebola-z.fasta ebola-t.fasta
 echo
 
+#windows
+
+ ./bioseq windows 5 2 test1.fasta
+echo
+
+#mapperKmer
+
+./bioseq mapper-windows-kmers 5 2 4 0.2 test2.fasta test1.fasta
+echo
+./bioseq mapper-windows-kmers 5 2 4 0.8 test2.fasta test1.fasta
+echo
+
+
 
 
 
