@@ -1,51 +1,36 @@
-BI TP 1, Lucie Vigreux, Edouard Delbar, groupe 2
+BI TP 2, Lucie Vigreux, Edouard Delbar, groupe 2
 
 ----
 
-**Question 9**
+**Question 4**
 
-    ebola-t phage-lambda  4   1.0
-    ebola-t phage-lambda  8   0.49244505494505497
-    ebola-t phage-lambda  12  0.0029063622912703447
-    ebola-t phage-lambda  16  0.0
-    ebola-t phage-lambda  20  0.0
+On remarque que sur les kmers avec graine contigüe, on a très peu de kmers communs pour des kmers de taille supérieure à 4 entre read1, read2 et phage-lambda.
 
-    ebola-z ebola-t       4   1.0
-    ebola-z ebola-t       8   0.3799071338117349
-    ebola-z ebola-t       12  0.025754697065653368
-    ebola-z ebola-t       16  0.009396114864864864
-    ebola-z ebola-t       20  0.0041182682154171065
+Plus la taille des kmers est grande et plus le seuil est élevé moins on a de fenêtres qui ont des kmers communs.
 
-La différence est significative sur des kmers de taille >= 12. On voit que les deux virus ebola sont plus proches que ebola-t et phage-lamba.
+De plus même pour des kmers de petites tailles on a peu de résultats qui dépassent le seuil de 50% de kmers communs.
 
 ----
 
-**Question 10**
+**Question 7**
 
-    > ./bioseq random-mutations 2 test1.fasta | tail -n 1 ; echo ; tail -n 1 test1.fasta
-    ATACTATACC
-    ATACTGTACT
+Nous avons du mal a interprêter les résultats, cependant on peut observer que globalement on a moins de kmers communs pour avec une graine contigüe que espacée.
 
 ----
 
-**Question 11**
 
-    ebola-z ebola-mutant-10     12  0.9937196537893181
-    ebola-z ebola-mutant-100    12  0.9392020265991133
-    ebola-z ebola-mutant-1000   12  0.5282351699387798
-    ebola-z ebola-mutant-10000  12  0.00506649778340722
+**Question 8**
 
-On remarque que plus il y a de mutations moins il y a de kmers communs entre les 2 ADNs.
+On remarque que dans le cas de graines espacées on a plus de fenêtres qui dépassent le seuil de kmers communs comparé à une graine contigüe. Ce constat est plus marqué pour les kmers de petite tailles.
 
-----
+Par exemple pour le kmer de taille 4 où aucun résultat ne dépassait le seuil de 50% pour une graine contigüe on obtient de nombreux résultats avec une graine espacée.
 
-**Question 12**
+Ce constat diminue pour les kmers de tailles plus élevés. En effet pour des kmers de taille 20 on a quand même très peu, voire pas de résultat, que l'on utilise une graine contigüe ou espacée.
 
-    > ./bioseq list-spaced-kmers '##-##' test1.fasta 
-    ATCT
-    TATG
-    ACGT
-    CTTA
-    TGAC
-    GTCT
+Nous avons essayé plusieurs façons d'espacer les graines pour voir si la position des espaces affectait le résultat à taille de graîne équivalente, nous n'avons pas relevé de différence notable à notre niveau.
+
+
+
+
+
 

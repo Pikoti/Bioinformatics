@@ -12,13 +12,13 @@ def main
             # args: file
             puts Fasta.toGenom(ARGV[1]).stats()
         when "list-kmers"
-            # args: size, file
+            # args: kmer, file
             puts Fasta.toGenom(ARGV[2]).toKmers(ARGV[1].to_i)
         when "common-kmers" 
-            # args: size, file1, file2
+            # args: kmer, file1, file2
             whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenCommonKmers)
         when "ratio-common-kmers" 
-            # args: size, file1, file2
+            # args: kmer, file1, file2
             whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenRatioCommonKmers)
         when "random-mutations" 
             # args: mutations, file
@@ -36,12 +36,10 @@ def main
             # args: length, shift, file
             whenWindows(ARGV[1].to_i, ARGV[2].to_i, ARGV[3])
         when "mapper-windows-kmers" 
-            # args: windows length, shift length, kmer length, 
-            # kmer seuil, read, genom
+            # args: window, shift, kmer, threshold, read, file
             whenMapperKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, ARGV[4].to_f, ARGV[5], ARGV[6])
         when "mapper-windows-spaced-kmers"
-            whenMapperSpacedKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3], ARGV[4].to_f, ARGV[5], ARGV[6])
-        when "f"
+            # args: window, shift, seed, threshold, read, file
             whenMapperSpacedKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3], ARGV[4].to_f, ARGV[5], ARGV[6])
         else
             puts "unknown function"
@@ -163,7 +161,7 @@ def mapperKmers (windLength, shiftLength, kmerLength, seuilKmer, read, genom)
             kmers = gen.toKmers(kmerLength)
             commons = commonKmers(kmersRead, kmers)
             if (commons.size.to_f / kmersRead.size.to_f) >= seuilKmer
-                puts "#{window.lNum}#{window.content}#{window.rNum}"
+                puts "#{window.lNum} #{window.content} #{window.rNum}"
             end
         end
     end
@@ -176,11 +174,11 @@ def mapperSpacedKmers (windLength, shiftLength, seed, seuilKmer, read, genom)
     else
         kmersRead = read.toSpacedKmers(seed) 
         windsGenom.each do |window|   
-        gen = Genom.new("", window.content) 
-        kmers = gen.toSpacedKmers(seed)
-        commons = commonKmers(kmersRead, kmers)
+            gen = Genom.new("", window.content) 
+            kmers = gen.toSpacedKmers(seed)
+            commons = commonKmers(kmersRead, kmers)
             if (commons.size.to_f / kmersRead.size.to_f) >= seuilKmer
-                puts "#{window.lNum}#{window.content}#{window.rNum}"
+                puts "#{window.lNum} #{window.content} #{window.rNum}"
             end
         end
     end
