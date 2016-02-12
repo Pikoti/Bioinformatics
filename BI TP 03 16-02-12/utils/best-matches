@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./bioseq2 best-matches 3 '###-###' ./fasta-tp3/reads-TRG.fasta ./fasta-tp3/TRGV.fasta 

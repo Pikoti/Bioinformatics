@@ -1,0 +1,286 @@
+#!/bin/bash
+
+set -x
+chmod +x bioseq
+
+## tp 1
+
+#./bioseq print-fasta-sequences test1.fasta
+echo
+
+# stats
+
+#./bioseq print-fasta-stats test1.fasta
+echo
+#./bioseq print-fasta-stats phage-lambda.fasta
+echo
+#./bioseq print-fasta-stats ebola-z.fasta
+echo
+#./bioseq print-fasta-stats ebola-t.fasta
+echo
+
+# kmers
+
+#./bioseq list-kmers 4 test1.fasta
+echo
+#./bioseq common-kmers 4 test2.fasta test1.fasta
+echo
+#./bioseq ratio-common-kmers 4 test2.fasta test1.fasta
+echo
+
+# ratio ebola-z phage-lambda
+
+#./bioseq ratio-common-kmers 4 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 8 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 12 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 16 ebola-z.fasta phage-lambda.fasta
+echo
+#./bioseq ratio-common-kmers 20 ebola-z.fasta phage-lambda.fasta
+echo
+
+# ratio ebola-z ebola-t
+
+#./bioseq ratio-common-kmers 4 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 8 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 12 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 16 ebola-z.fasta ebola-t.fasta
+echo
+#./bioseq ratio-common-kmers 20 ebola-z.fasta ebola-t.fasta
+echo
+
+# mutations
+
+#./bioseq random-mutations 2 test1.fasta
+echo
+#./bioseq random-mutations 0 ebola-z.fasta > ebola-mutant-0.fasta
+echo
+#./bioseq random-mutations 10 ebola-z.fasta > ebola-mutant-10.fasta
+echo
+#./bioseq random-mutations 100 ebola-z.fasta > ebola-mutant-100.fasta
+echo
+#./bioseq random-mutations 1000 ebola-z.fasta > ebola-mutant-1000.fasta
+echo
+#./bioseq random-mutations 10000 ebola-z.fasta > ebola-mutant-10000.fasta
+echo
+
+# spaced kmers
+
+#./bioseq list-spaced-kmers '##-##' test1.fasta
+echo
+#./bioseq common-spaced-kmers '#-#' test1.fasta test2.fasta
+echo
+#./bioseq ratio-common-spaced-kmers '####--####' ebola-z.fasta ebola-t.fasta
+echo
+
+## tp 2
+
+# windows
+
+./bioseq windows 5 2 test1.fasta
+echo
+
+# mapper kmer
+
+./bioseq mapper-windows-kmers 5 2 4 0.2 test2.fasta test1.fasta
+echo
+./bioseq mapper-windows-kmers 5 2 4 0.8 test2.fasta test1.fasta
+echo
+
+# mapper kmer # read1 vs phage-lambda
+
+./bioseq mapper-windows-kmers 20 10 4 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 4 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 4 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 4 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+
+# mapper kmer # read2 vs phage-lambda
+
+./bioseq mapper-windows-kmers 20 10 4 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 4 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 4 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 4 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 8 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 12 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 16 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-kmers 20 10 20 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+
+# mapper spaced kmer
+
+./bioseq mapper-windows-spaced-kmers 5 2 '###' 0.2 test2.fasta test1.fasta
+echo
+./bioseq mapper-windows-spaced-kmers 5 2 '###' 0.3 test2.fasta test1.fasta
+echo
+
+# mapper spaced kmer # read1 vs phage-lambda
+
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 0.1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 0.2 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 0.5 read1.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 1 read1.fa phage-lambda.fasta | tail -n 10
+echo
+
+# mapper spaced kmer # read2 vs phage-lambda
+
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#--#' 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##-##-##' 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '###-####-###' 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '#####-####-#####' 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 0.1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 0.2 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 0.5 read2.fa phage-lambda.fasta | tail -n 10
+echo
+./bioseq mapper-windows-spaced-kmers 20 10 '##--##-##--##-##--##' 1 read2.fa phage-lambda.fasta | tail -n 10
+echo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
