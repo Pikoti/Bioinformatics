@@ -1,41 +1,33 @@
-class Genom
+class DNA
 
-    attr_accessor :id, :genom
+    attr_accessor :dna
 
-    def initialize (id, genom)
-        @id = id
-        @genom = genom
+    def initialize (dna)
+        @dna = dna.upcase
     end
 
     def clone ()
-        Genom.new(@id, @genom)
+        DNA.new(@dna)
     end
 
     def size ()
-        @genom.length
+        @dna.length
     end
 
-    def stats ()
-        "#{@id} #{self.size()}"
-    end
-
-    def fasta
-        ">#{@id}\n#{@genom}"
-    end
-
-    def to_s
-        @genom
+    def window (i, length)
+        DNA.new(@dna[i..(i + length - 1)])
     end
 
     def mutate (n)
-        n.times do self.changeOneLetter() end
-        self
+        n.times do 
+            self.changeOneLetter()
+        end
     end
 
     def toKmers (size)
         str = ""
         kmers = []
-        @genom.each_char do |c|
+        @dna.each_char do |c|
             str += c
             if str.length == size
                 kmers.push(str[0..(size - 1)])
@@ -61,13 +53,9 @@ class Genom
     def changeOneLetter ()
         i = rand(self.size())
         alphabet = ["A", "C", "G", "T"]
-        alphabet = alphabet - [@genom[i]]
+        alphabet = alphabet - [@dna[i]]
         alphabet = alphabet.shuffle
-        @genom[i] = alphabet[0]
+        @dna[i] = alphabet[0]
     end
-
-    def window(i, length)
-        @genom[i..i + length - 1]
-    end    
 
 end

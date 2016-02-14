@@ -1,3 +1,4 @@
 #!/bin/sh
 
-./bioseq2 best-matches 3 '###-###' ./fasta-tp3/reads-TRG.fasta ./fasta-tp3/TRGV.fasta 
+./bioseq best-matches 5 '###-###' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta | column -t
+./bioseq best-matches 5 '###-###' ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta | column -t

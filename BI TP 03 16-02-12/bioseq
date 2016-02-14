@@ -1,191 +1,78 @@
 #!/usr/bin/ruby
 
 require './src/Fasta.rb'
-require './src/Genom.rb'
 
 def main
     case ARGV[0] 
-        when "print-fasta-sequences" 
-            # args: file
-            puts Fasta.toGenom(ARGV[1])
-        when "print-fasta-stats" 
-            # args: file
-            puts Fasta.toGenom(ARGV[1]).stats()
-        when "list-kmers"
-            # args: kmer, file
-            puts Fasta.toGenom(ARGV[2]).toKmers(ARGV[1].to_i)
-        when "common-kmers" 
-            # args: kmer, file1, file2
-            whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenCommonKmers)
-        when "ratio-common-kmers" 
-            # args: kmer, file1, file2
-            whenCommon(ARGV[1].to_i, ARGV[2], ARGV[3], :whenRatioCommonKmers)
-        when "random-mutations" 
-            # args: mutations, file
-            whenRandomMutations(ARGV[1].to_i, ARGV[2])
-        when "list-spaced-kmers"
-            # args: seed, file
-            puts Fasta.toGenom(ARGV[2]).toKmers(ARGV[1])
-        when "common-spaced-kmers" 
-            # args: seed, file1, file2
-            whenCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
-        when "ratio-common-spaced-kmers" 
-            # args: seed, file1, file2
-            whenRatioCommonSpacedKmers(ARGV[1], ARGV[2], ARGV[3])
-        when "windows" 
-            # args: length, shift, file
-            whenWindows(ARGV[1].to_i, ARGV[2].to_i, ARGV[3])
-        when "mapper-windows-kmers" 
-            # args: window, shift, kmer, threshold, read, file
-            whenMapperKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, ARGV[4].to_f, ARGV[5], ARGV[6])
-        when "mapper-windows-spaced-kmers"
-            # args: window, shift, seed, threshold, read, file
-            whenMapperSpacedKmers(ARGV[1].to_i, ARGV[2].to_i, ARGV[3], ARGV[4].to_f, ARGV[5], ARGV[6])
+        when "best-matches"
+            # sequences seed read germline
+            whenBestMatches(ARGV[1].to_i, ARGV[2], ARGV[3], ARGV[4])
+        when "VJ-discover"
+            # seed reads germlineV germlineJ
+            whenVJDiscover(ARGV[1], ARGV[2], ARGV[3], ARGV[4])
+        when "VJ-segmenter-one-one-one"
+            # seed read seqV seqJ
+            whenVJSegmenterOneOneOne(ARGV[1], ARGV[2], ARGV[3], ARGV[4])
         else
-            puts "unknown function"
+            puts "unknown command"
     end
 end
 
-#struct
-
-Window = Struct.new(:lNum, :rNum, :content)
-
-# commands
-
-def whenCommon(size, file1, file2, f)
-    genom1 = Fasta.toGenom(file1)
-    kmers1 = genom1.toKmers(size)
-    genom2 = Fasta.toGenom(file2)
-    kmers2 = genom2.toKmers(size)
-    send(f, kmers1, kmers2)
-end
-
-def whenCommonKmers (kmers1, kmers2)
-    puts commonKmers(kmers1, kmers2)
-end
-
-def whenRatioCommonKmers (kmers1, kmers2)
-    commons = commonKmers(kmers1, kmers2)
-    puts commons.size.to_f / kmers1.size.to_f
-end
-
-def whenCommonSpacedKmers (seed, file1, file2)
-    genom1 = Fasta.toGenom(file1)
-    kmers1 = genom1.toSpacedKmers(seed)
-    genom2 = Fasta.toGenom(file2)
-    kmers2 = genom2.toSpacedKmers(seed)
-    commons = commonKmers(kmers1, kmers2)
-    puts commons
-end
-
-def whenRatioCommonSpacedKmers (seed, file1, file2)
-    genom1 = Fasta.toGenom(file1)
-    kmers1 = genom1.toSpacedKmers(seed)
-    genom2 = Fasta.toGenom(file2)
-    kmers2 = genom2.toSpacedKmers(seed)
-    commons = commonKmers(kmers1, kmers2)
-    puts commons.size.to_f / kmers1.size.to_f
-end
-
-def whenRandomMutations (n, file)
-    genom = Fasta.toGenom(file).mutate(n)
-    puts ">#{genom.id}-mutated-#{n}"
-    puts genom
-end
-
-def whenWindows (length, shift, file)
-    genom = Fasta.toGenom(file)
-    windows = toWindows(length, shift, genom)
-    windows.each do |window|
-        puts "#{window.lNum}#{window.content}#{window.rNum}"
+def whenBestMatches (n, seed, read, germline)
+    read = Fasta.new(read).at(0)
+    germline = Fasta.new(germline)
+    matches = matches(seed, read, germline)
+    matches[0..n-1].each do |tuple|
+        id = tuple[0].id
+        size = tuple[1].size.to_s
+        print ">#{id}\t#{size}\n"
     end
 end
 
-def whenMapperKmers (windLength, shiftLength, kmerLength, seuilKmer, readFile, genomFile)
-    read = Fasta.toGenom(readFile)
-    genom = Fasta.toGenom(genomFile)
-    mapperKmers(windLength, shiftLength, kmerLength, seuilKmer, read, genom)
-end
-
-def whenMapperSpacedKmers (windLength, shiftLength, seed, seuilKmer, readFile, genomFile)
-    read = Fasta.toGenom(readFile)
-    genom = Fasta.toGenom(genomFile)
-    mapperSpacedKmers(windLength, shiftLength, seed, seuilKmer, read, genom)
-end
-
-# algos
-
-def commonKmers (kmers1, kmers2)
-    commons = []
-    kmers1.each do |kmer|
-        if kmers2.include? kmer
-            commons.push(kmer)
-        end
+def whenVJDiscover (seed, reads, germlineV, germlineJ)
+    reads = Fasta.new(reads)
+    germlineV = Fasta.new(germlineV)
+    germlineJ = Fasta.new(germlineJ)
+    reads.each do |read|
+        bestV = matches(seed, read, germlineV)[0][0]
+        bestJ = matches(seed, read, germlineJ)[0][0]
+        print ">#{read.id}\t#{bestV.id}\t#{bestJ.id}\n"
     end
-    commons
 end
 
-
-def toWindows (length, shift, genom)
+def whenVJSegmenterOneOneOne(seed, read, seqV, seqJ)
     i = 0
-    windows = []
-    pad = Math.log10(genom.size()).ceil
-    loop do
-        window = genom.window(i, length)
-        if window.length < length
-            break
-        else
-            lNum = (i + 1).to_s.rjust(pad, ' ')
-            rNum = (i + length).to_s.rjust(pad, ' ')
-            w = Window.new
-            w.content = window
-            w.rNum = rNum
-            w.lNum = lNum
-            windows.push(w)
-            i += shift
-        end
-    end
-    windows
-end
-
-# formule: 1 + (n -l)/s
-
-def mapperKmers (windLength, shiftLength, kmerLength, seuilKmer, read, genom)
-    windsGenom = toWindows(windLength, shiftLength, genom)
-    if read.size() < windLength
-       puts "Read size is < window size"
-    else
-        kmersRead = read.toKmers(kmerLength)
-        windsGenom.each do |window|
-            gen = Genom.new("", window.content) 
-            kmers = gen.toKmers(kmerLength)
-            commons = commonKmers(kmersRead, kmers)
-            if (commons.size.to_f / kmersRead.size.to_f) >= seuilKmer
-                puts "#{window.lNum} #{window.content} #{window.rNum}"
+    bestRatio = 0
+    read = Fasta.new(read).at(0)
+    seqV = Fasta.new(seqV).at(0)
+    seqJ = Fasta.new(seqJ).at(0)
+    kmersA = read.dna.toSpacedKmers(seed)
+    read.dna.size.times do |j|
+        if j + seqV.dna.size <= read.dna.size
+            window = read.window(j, seqV.dna.size)
+            kmersB = window.dna.toSpacedKmers(seed)
+            commons = kmersA & kmersB
+            ratio = commons.size.to_f / kmersA.size.to_f
+            if bestRatio < ratio
+                i = j
+                bestRatio = ratio
             end
         end
     end
+    print read.dna
+    print "\n"
+    print read.dna.window(0, i).dna.dna
 end
 
-def mapperSpacedKmers (windLength, shiftLength, seed, seuilKmer, read, genom)
-    windsGenom = toWindows(windLength, shiftLength, genom)
-    if read.size() < windLength
-       puts "Read size is < window size"
-    else
-        kmersRead = read.toSpacedKmers(seed) 
-        windsGenom.each do |window|   
-            gen = Genom.new("", window.content) 
-            kmers = gen.toSpacedKmers(seed)
-            commons = commonKmers(kmersRead, kmers)
-            if (commons.size.to_f / kmersRead.size.to_f) >= seuilKmer
-                puts "#{window.lNum} #{window.content} #{window.rNum}"
-            end
-        end
-    end
+def matches (seed, read, germline)
+    kmersA = read.dna.toSpacedKmers(seed)
+    germline.map do |seq|
+        kmersB = seq.dna.toSpacedKmers(seed)
+        commons = kmersA & kmersB
+        ratio = commons.size.to_f / kmersA.size.to_f
+        [seq, commons, ratio]
+    end.sort { |x, y| y[2] - x[2] }
 end
-
-
-
 
 main
 
