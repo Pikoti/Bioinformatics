@@ -3,4 +3,35 @@
 set -x
 chmod +x bioseq
 
+echo -e '\nbest matches read1 germlineV taille 4\n'
+./bioseq best-matches 5 '####' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineV taille 8\n'
+./bioseq best-matches 5 '########' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineV taille 12\n'
+./bioseq best-matches 5 '############' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineV taille 16\n'
+./bioseq best-matches 5 '################' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineV taille 20\n'
+./bioseq best-matches 5 '####################' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta 0 | column -t
 
+echo -e '\nbest matches read1 germlineJ taille 4\n'
+./bioseq best-matches 5 '####' ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineJ taille 8\n'
+./bioseq best-matches 5 '########' ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineJ taille 12\n'
+./bioseq best-matches 5 '############' ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineJ taille 16\n'
+./bioseq best-matches 5 '################' ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta 0 | column -t
+echo -e '\nbest matches read1 germlineJ taille 20\n'
+./bioseq best-matches 5 '####################' ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta 0 | column -t
+
+echo -e '\nVJ discover read1 taille 4\n'
+./bioseq VJ-discover '####' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
+echo -e '\nVJ discover read1 taille 8\n'
+./bioseq VJ-discover '########' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
+echo -e '\nVJ discover read1 taille 12\n'
+./bioseq VJ-discover '############' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
+echo -e '\nVJ discover read1 taille 16\n'
+./bioseq VJ-discover '################' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
+echo -e '\nVJ discover read1 taille 20\n'
+./bioseq VJ-discover '####################' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t

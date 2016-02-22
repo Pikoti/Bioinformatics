@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./bioseq VJ-discover '###-###' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
+./bioseq VJ-discover $1 ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t

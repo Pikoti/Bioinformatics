@@ -6,7 +6,7 @@ def main
     case ARGV[0] 
         when "best-matches"
             # sequences seed read germline
-            whenBestMatches(ARGV[1].to_i, ARGV[2], ARGV[3], ARGV[4])
+            whenBestMatches(ARGV[1].to_i, ARGV[2], Fasta.new(ARGV[3]).at(ARGV[5].to_i), ARGV[4])
         when "VJ-discover"
             # seed reads germlineV germlineJ
             whenVJDiscover(ARGV[1], ARGV[2], ARGV[3], ARGV[4])
@@ -19,7 +19,6 @@ def main
 end
 
 def whenBestMatches (n, seed, read, germline)
-    read = Fasta.new(read).at(0)
     germline = Fasta.new(germline)
     matches = matches(seed, read, germline)
     matches[0..n-1].each do |tuple|
