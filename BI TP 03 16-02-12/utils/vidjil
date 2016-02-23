@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./vidjil-2015.10.2/vidjil -c segment -V ./fasta -J ./fasta

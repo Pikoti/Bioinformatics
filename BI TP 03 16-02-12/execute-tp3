@@ -35,3 +35,8 @@ echo -e '\nVJ discover read1 taille 16\n'
 ./bioseq VJ-discover '################' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
 echo -e '\nVJ discover read1 taille 20\n'
 ./bioseq VJ-discover '####################' ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta ./fasta/TRGJ.fasta | column -t
+
+echo -e '\nVJ segmenter one one one\n'
+./bioseq VJ-segmenter-one-one-one '####-####' fasta/reads-TRG.fasta fasta/TRGV.fasta fasta/TRGJ.fasta
+echo -e '\nVJ segmenter\n'
+./bioseq VJ-segmenter '####-####' fasta/reads-TRG.fasta fasta/TRGV.fasta fasta/TRGJ.fasta

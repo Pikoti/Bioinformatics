@@ -1,25 +1,29 @@
 #!/usr/bin/ruby
 
-require './src/Fasta.rb'
+require './src/FastaFile.rb'
 
 def main
     case ARGV[0] 
         when "best-matches"
             # sequences seed read germline
-            whenBestMatches(ARGV[1].to_i, ARGV[2], Fasta.new(ARGV[3]).at(ARGV[5].to_i), ARGV[4])
+            read = FastaFile.new(ARGV[3]).at(ARGV[5].to_i)
+            whenBestMatches(ARGV[1].to_i, ARGV[2], read, ARGV[4])
         when "VJ-discover"
             # seed reads germlineV germlineJ
             whenVJDiscover(ARGV[1], ARGV[2], ARGV[3], ARGV[4])
         when "VJ-segmenter-one-one-one"
             # seed read seqV seqJ
             whenVJSegmenterOneOneOne(ARGV[1], ARGV[2], ARGV[3], ARGV[4])
+        when "VJ-segmenter"
+            # seed reads germlineV germlineJ
+            whenVJSegmenter(ARGV[1], ARGV[2], ARGV[3], ARGV[4])
         else
             puts "unknown command"
     end
 end
 
 def whenBestMatches (n, seed, read, germline)
-    germline = Fasta.new(germline)
+    germline = FastaFile.new(germline)
     matches = matches(seed, read, germline)
     matches[0..n-1].each do |tuple|
         id = tuple[0].id
@@ -29,38 +33,32 @@ def whenBestMatches (n, seed, read, germline)
 end
 
 def whenVJDiscover (seed, reads, germlineV, germlineJ)
-    reads = Fasta.new(reads)
-    germlineV = Fasta.new(germlineV)
-    germlineJ = Fasta.new(germlineJ)
-    reads.each do |read|
-        bestV = matches(seed, read, germlineV)[0][0]
-        bestJ = matches(seed, read, germlineJ)[0][0]
-        print ">#{read.id}\t#{bestV.id}\t#{bestJ.id}\n"
+    reads = FastaFile.new(reads)
+    germlineV = FastaFile.new(germlineV)
+    germlineJ = FastaFile.new(germlineJ)
+    discovery = discover(seed, reads, germlineV, germlineJ)
+    discovery.each do |tuple|
+        print ">#{tuple[0].id}\t#{tuple[1].id}\t#{tuple[2].id}\n"
     end
 end
 
-def whenVJSegmenterOneOneOne(seed, read, seqV, seqJ)
-    i = 0
-    bestRatio = 0
-    read = Fasta.new(read).at(0)
-    seqV = Fasta.new(seqV).at(0)
-    seqJ = Fasta.new(seqJ).at(0)
-    kmersA = read.dna.toSpacedKmers(seed)
-    read.dna.size.times do |j|
-        if j + seqV.dna.size <= read.dna.size
-            window = read.window(j, seqV.dna.size)
-            kmersB = window.dna.toSpacedKmers(seed)
-            commons = kmersA & kmersB
-            ratio = commons.size.to_f / kmersA.size.to_f
-            if bestRatio < ratio
-                i = j
-                bestRatio = ratio
-            end
-        end
+def whenVJSegmenterOneOneOne (seed, read, seqV, seqJ)
+    read = FastaFile.new(read).at(0)
+    seqV = FastaFile.new(seqV).at(0)
+    seqJ = FastaFile.new(seqJ).at(0)
+    segments = segmenter(seed, read, seqV, seqJ)
+    print "#{segments[0]}\n#{segments[1]}\n#{segments[2]}"
+end
+
+def whenVJSegmenter (seed, reads, germlineV, germlineJ)
+    reads = FastaFile.new(reads)
+    germlineV = FastaFile.new(germlineV)
+    germlineJ = FastaFile.new(germlineJ)
+    discovery = discover(seed, reads, germlineV, germlineJ)
+    discovery.each do |tuple|
+        i = segmenter(seed, tuple[0], tuple[1], tuple[2])[1]
+        print ">#{tuple[0].id}\t#{tuple[1].id}\t#{i}\t#{tuple[2].id}\n"
     end
-    print read.dna
-    print "\n"
-    print read.dna.window(0, i).dna.dna
 end
 
 def matches (seed, read, germline)
@@ -71,6 +69,36 @@ def matches (seed, read, germline)
         ratio = commons.size.to_f / kmersA.size.to_f
         [seq, commons, ratio]
     end.sort { |x, y| y[2] - x[2] }
+end
+
+def discover (seed, reads, germlineV, germlineJ)
+    reads.map do |read|
+        bestV = matches(seed, read, germlineV)[0][0]
+        bestJ = matches(seed, read, germlineJ)[0][0]
+        [read, bestV, bestJ]
+    end
+end
+
+def segmenter (seed, read, seqV, seqJ)
+    i = 0
+    bestRatio = 0
+    kmersV = seqV.dna.toSpacedKmers(seed)
+    kmersJ = seqJ.dna.toSpacedKmers(seed)
+    read.dna.size.times do |j|
+        left = DNA.new(read.dna.dna[0..j])
+        right = DNA.new(read.dna.dna[(j+1)..-1])
+        kmersL = left.toSpacedKmers(seed)
+        kmersR = right.toSpacedKmers(seed)
+        commonsV = kmersV & kmersL
+        commonsJ = kmersJ & kmersR
+        ratioV = commonsV.size.to_f / kmersV.size.to_f
+        ratioJ = commonsJ.size.to_f / kmersJ.size.to_f
+        if ratioV + ratioJ > bestRatio
+            bestRatio = ratioV + ratioJ
+            i = j
+        end
+    end
+    [read.dna.dna[0..i], i, read.dna.dna[(i+1)..-1]]
 end
 
 main

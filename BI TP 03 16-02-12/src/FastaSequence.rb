@@ -1,6 +1,6 @@
 require './src/DNA.rb'
 
-class Sequence
+class FastaSequence
 
     attr_accessor :id, :dna
 

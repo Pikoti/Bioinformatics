@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./bioseq VJ-segmenter $1 fasta/reads-TRG.fasta fasta/TRGV.fasta fasta/TRGJ.fasta

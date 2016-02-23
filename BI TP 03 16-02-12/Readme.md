@@ -8,9 +8,4 @@ Concernant la commande `best-matches`, on remarque que les écarts entre les 5 m
 
 La commande `VJ-discover` ne montre pas de grandes variations entre les différentes tailles. On constate quand même des changements pour quelques reads. On peut dire que la taille du kmer a une influence sur la détection de la séquence la plus proche du read.
 
-----
-
-**Question 4**
-
-
 

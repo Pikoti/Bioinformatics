@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo
+echo V
 ./bioseq best-matches 5 $2 ./fasta/reads-TRG.fasta ./fasta/TRGV.fasta $1 | column -t
 echo J
 ./bioseq best-matches 5 $2 ./fasta/reads-TRG.fasta ./fasta/TRGJ.fasta $1 | column -t

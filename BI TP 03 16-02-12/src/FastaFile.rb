@@ -1,6 +1,6 @@
-require './src/Sequence.rb'
+require './src/FastaSequence.rb'
 
-class Fasta
+class FastaFile
 
     def initialize (file)
         file = File.read(file)
@@ -44,7 +44,7 @@ class Fasta
         sequences = []
         lines = file.split("\n")[1..-1]
         lines.each_slice(2) do |id, dna|
-            sequences.push(Sequence.new(id[1..-1], dna))
+            sequences.push(FastaSequence.new(id[1..-1], dna))
         end
         sequences
     end
