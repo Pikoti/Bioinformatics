@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo -e '\nphage-lambda GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+time ./bioseq search-fasta-naive fasta/phage-lambda.fasta GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT
+echo -e '\n'
+
+echo -e 'phage-lambda ATAGTG\n'
+time ./bioseq search-fasta-naive fasta/phage-lambda.fasta ATAGTG
+echo -e '\n'
