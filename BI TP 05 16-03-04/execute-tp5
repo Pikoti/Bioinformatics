@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo -e '\n### search-fasta-naive'
+
+echo -e '\n## phage-lambda GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+time ./bioseq search-fasta-naive fasta/phage-lambda.fasta GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT
+
+echo -e '\n## phage-lambda ATAGTG\n'
+time ./bioseq search-fasta-naive fasta/phage-lambda.fasta ATAGTG
+
+echo -e '\n### suffix-array'
+
+echo -e '\n## GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+echo '>' > fasta/temp-suffix-array.fasta
+echo 'GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT' >> fasta/temp-suffix-array.fasta
+time ./bioseq suffix-array fasta/temp-suffix-array.fasta
+
+echo -e '\n## phage-lambda\n'
+time ./bioseq suffix-array fasta/phage-lambda.fasta
+
+echo -e '\n### bwt'
+
+echo -e '\n## GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+echo '>' > fasta/temp-bwt.fasta
+echo 'GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT' >> fasta/temp-bwt.fasta
+time ./bioseq bwt fasta/temp-bwt.fasta
+
+echo -e '\n## ebola\n'
+time ./bioseq bwt fasta/ebola.fasta
+
+echo -e '\n'

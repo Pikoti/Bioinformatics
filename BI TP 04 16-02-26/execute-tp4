@@ -6,4 +6,12 @@ echo -e '\n'
 
 echo -e 'phage-lambda ATAGTG\n'
 time ./bioseq search-fasta-naive fasta/phage-lambda.fasta ATAGTG
+
+echo -e 'GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+echo '>' > fasta/temp-suffix-array.fasta
+echo 'GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT' >> fasta/temp-suffix-array.fasta
+time ./bioseq suffix-array fasta/temp-suffix-array.fasta
+
+echo -e 'phage-lambda\n'
+time ./bioseq suffix-array fasta/phage-lambda.fasta
 echo -e '\n'

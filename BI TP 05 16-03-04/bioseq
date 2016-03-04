@@ -1,0 +1,61 @@
+#!/usr/bin/python
+
+import sys
+from Bio import SeqIO
+
+def main(cmd): {
+    "search-fasta-naive" : lambda : searchFastaNaive(sys.argv[2], sys.argv[3]),
+    "suffix-array"       : lambda : cmd2(sys.argv[2]),
+    "bwt"                : lambda : cmd3(sys.argv[2])
+}[cmd]()
+
+def cmd2(g):
+    g = fasta2genom(g)
+    xs = suffixArray(g)
+    xs = map(str, xs)
+    print " ".join(xs)
+
+def cmd3(f):
+    print bwt(f)
+
+def fasta2genom(g):
+    gh = open(g, "r")
+    g = list(SeqIO.parse(gh, "fasta"))[0].seq
+    gh.close()
+    return g   
+
+def suffixArray(g):
+    l = []
+    gn = len(g)
+    for i in range(gn) :
+        l.append((i, g[i:gn]))
+    return map(
+        lambda pair : pair[0], 
+        sorted(l, key=lambda pair : pair[1])
+    )
+
+def searchFastaNaive(g, r):
+    g = fasta2genom(g)
+    gn = len(g)
+    rn = len(r)
+    for i in range(gn) :
+        if g[i:i+rn] == r :
+            sys.stdout.write(str(i) + " ")
+
+def bwt(f):
+    g = str(fasta2genom(f))
+    idxs = suffixArray(g)
+    bwt = map(lambda idx : ("$" + g[0:idx])[idx], idxs)
+    bwt = "".join(bwt)
+    bwt = g[-1] + bwt
+    return bwt
+
+def invBWT(s):
+    t = map(lambda c : c, s)
+    for i in range(len(s)) :
+        t = sorted(t)
+        t = map (lambda s : s[i] + t[i], s) 
+            
+
+
+main(sys.argv[1])
