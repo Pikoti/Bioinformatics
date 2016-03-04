@@ -1,0 +1,1 @@
+#define GIT_VERSION "eb3c33a (2015-10-08)"

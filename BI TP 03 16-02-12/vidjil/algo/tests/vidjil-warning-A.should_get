@@ -1,0 +1,9 @@
+!LAUNCH: ../../vidjil -A -G ../../germline/IGH ../../data/toy_V.fa
+
+$ Warning, -A
+1:WARNING
+
+$ Link to documentation
+1:algo.org
+
+
