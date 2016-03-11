@@ -1,0 +1,12 @@
+c(x) = # d'occurrences de caractères < x (dans la BWT)
+rank(i, x) = # d'occurrences de x dans la BWT[1..i]
+remarquer que c(x) = rank(|BWT|, x)
+
+Recherche dans BWT:
+
+    s <- 1
+    t <- |B|
+    pour i de |B| à 1 (ordre décroissant):
+        s <- c(B[i]) + rank(s - 1, B[i]) + 1
+        t <- c(B[i]) + rank(t, B[i])
+    retourner "trouvé" si s <= t

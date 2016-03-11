@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Partie 1"
+
+./bioseq suffix-array fasta/phage-lambda.fasta | cut -d\  -f 1-10
+
+./bioseq bwt fasta/phage-lambda.fasta > lambda_phage.bwt
+cat lambda_phage.bwt | cut -b 1-10
+
+echo "Partie 2"

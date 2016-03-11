@@ -28,4 +28,15 @@ time ./bioseq bwt fasta/temp-bwt.fasta
 echo -e '\n## ebola\n'
 time ./bioseq bwt fasta/ebola.fasta
 
+echo -e '\n### unbwt'
+
+echo -e '\n## GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+./bioseq bwt fasta/temp-bwt.fasta > temp.bwt
+time ./bioseq unbwt temp.bwt
+
+echo -e '\n## ebola\n'
+./bioseq bwt fasta/ebola.fasta > ebola.bwt
+time ./bioseq unbwt ebola.bwt
+
+
 echo -e '\n'

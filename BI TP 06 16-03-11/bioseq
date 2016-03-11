@@ -5,15 +5,16 @@ from Bio import SeqIO
 
 def main(cmd): {
     "search-fasta-naive" : lambda : searchFastaNaive(sys.argv[2], sys.argv[3]),
-    "suffix-array"       : lambda : cmd2(sys.argv[2]),
+    "suffix-array-naive" : lambda : cmd2(sys.argv[2]),
     "bwt"                : lambda : cmd3(sys.argv[2]),
-    "unbwt"              : lambda : cmd4(sys.argv[2])
-    
+    "unbwt"              : lambda : cmd4(sys.argv[2]),
+    "suffix-array"       : lambda : cmd5(sys.argv[2]),
+    "match-bwt"          : lambda : cmd6(sys.argv[2], sys.argv[3])
 }[cmd]()
 
 def cmd2(g):
     g = fasta2genom(g)
-    xs = suffixArray(g)
+    xs = suffixArrayNaive(g)
     xs = map(str, xs)
     print " ".join(xs)
 
@@ -22,18 +23,61 @@ def cmd3(f):
     print bwt(g)
 
 def cmd4(f):
-    fh = open(f, "r")
-    s = fh.readline()[0:-1]
-    fh.close()
+    s = bwt2string(f)
     print unbwt(s)
+
+def cmd5(g):
+    g = fasta2genom(g)
+    xs = suffixArray(g)
+    xs = map(str, xs)
+    print " ".join(xs)
+
+def cmd6(bwt, r):
+    bwt = bwt2string(bwt)
+    matchBwt(bwt, r)
 
 def fasta2genom(f):
     fh = open(f, "r")
     g = list(SeqIO.parse(fh, "fasta"))[0].seq
     fh.close()
-    return g   
+    return g
+
+def bwt2string(f):
+    fh = open(f, "r")
+    s = fh.readline()[0:-1]
+    fh.close()
+    return s
+
+def C(x, bwt):
+    n = 0
+    for c in bwt :
+        if c < x :
+            n = n + 1
+    return n
+
+def rank(i, x, bwt):
+    n = 0
+    sliceBwt = bwt[1:i]
+    for c in sliceBwt :
+        if c == x :
+            n = n + 1
+    return n
+
+def matchBwt(bwt, r):
+    s = 1
+    t = len(r)
+    for i in reversed(range(len(r))):
+        s = C(r[i]) + rank(s-1, r[i]) + 1
+        t = C(r[i]) + rank(t, r[i])
+    return "Found" if s <= t
 
 def suffixArray(g):
+    return sorted(
+        range(len(g)), 
+        cmp=lambda x, y : cmp(g[x:], g[y:])
+    )
+
+def suffixArrayNaive(g):
     l = []
     gn = len(g)
     for i in range(gn) :
