@@ -34,7 +34,7 @@ def cmd5(g):
 
 def cmd6(bwt, r):
     bwt = bwt2string(bwt)
-    matchBwt(bwt, r)
+    print matchBwt(bwt, r)
 
 def fasta2genom(f):
     fh = open(f, "r")
@@ -57,7 +57,7 @@ def C(x, bwt):
 
 def rank(i, x, bwt):
     n = 0
-    sliceBwt = bwt[1:i]
+    sliceBwt = bwt[0:i]
     for c in sliceBwt :
         if c == x :
             n = n + 1
@@ -65,11 +65,12 @@ def rank(i, x, bwt):
 
 def matchBwt(bwt, r):
     s = 1
-    t = len(r)
+    t = len(bwt)
     for i in reversed(range(len(r))):
-        s = C(r[i]) + rank(s-1, r[i]) + 1
-        t = C(r[i]) + rank(t, r[i])
-    return "Found" if s <= t
+        s = C(r[i], bwt) + rank(s-1, r[i], bwt) + 1
+        t = C(r[i], bwt) + rank(t, r[i], bwt)
+    if s <= t :
+        return "Found" 
 
 def suffixArray(g):
     return sorted(

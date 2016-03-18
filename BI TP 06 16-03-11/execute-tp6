@@ -1,10 +1,58 @@
 #!/bin/bash
 
-echo "Partie 1"
+echo -e '\n# tp 4'
+
+echo -e '\n## search-fasta-naive'
+
+echo -e '\n### phage-lambda GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+time ./bioseq search-fasta-naive fasta/phage-lambda.fasta GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT
+
+echo -e '\n### phage-lambda ATAGTG\n'
+time ./bioseq search-fasta-naive fasta/phage-lambda.fasta ATAGTG
+
+echo -e '\n## suffix-array'
+
+echo -e '\n### GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+echo '>' > fasta/temp-suffix-array.fasta
+echo 'GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT' >> fasta/temp-suffix-array.fasta
+time ./bioseq suffix-array fasta/temp-suffix-array.fasta
+
+echo -e '\n### phage-lambda\n'
+time ./bioseq suffix-array fasta/phage-lambda.fasta
+
+echo -e '\n# tp 5'
+
+echo -e '\n## bwt'
+
+echo -e '\n### GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+echo '>' > fasta/temp-bwt.fasta
+echo 'GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT' >> fasta/temp-bwt.fasta
+time ./bioseq bwt fasta/temp-bwt.fasta
+
+echo -e '\n### ebola\n'
+time ./bioseq bwt fasta/ebola.fasta
+
+echo -e '\n## unbwt'
+
+echo -e '\n### GGCCATCCTTCCTGACCATTTCCATCATTCCAGTCGAACT\n'
+./bioseq bwt fasta/temp-bwt.fasta > temp.bwt
+time ./bioseq unbwt temp.bwt
+
+echo -e '\n### ebola\n'
+./bioseq bwt fasta/ebola.fasta > ebola.bwt
+time ./bioseq unbwt ebola.bwt
+
+echo -e '\n# tp 6'
+
+echo -e "\n##Partie 1\n"
 
 ./bioseq suffix-array fasta/phage-lambda.fasta | cut -d\  -f 1-10
 
 ./bioseq bwt fasta/phage-lambda.fasta > lambda_phage.bwt
 cat lambda_phage.bwt | cut -b 1-10
 
-echo "Partie 2"
+echo -e "\n##Partie 2\n"
+
+time ./bioseq match-bwt lambda_phage.bwt GGCGCGCAGTGACACTGCGCTGGATCGTCTGATG
+time ./bioseq match-bwt lambda_phage.bwt AGGCGCGCAGTGACACTGCCGCTGGGATCGTCTGATG
+
